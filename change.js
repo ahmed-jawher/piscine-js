@@ -1,6 +1,3 @@
-// Assume a shared sourceObject exists or initialize one
-// eslint-disable-next-line no-redeclare, no-undef
-const sourceObject = (typeof sourceObject !== 'undefined') ? sourceObject : {};
 
 // get: takes a key and returns the corresponding value from sourceObject
 function get(key) {
