@@ -1,9 +1,13 @@
-// Define the base person object
-const person = {
-  name: 'Alice',
-  age: 30,
-  country: 'US',
-};
+// Define or reuse the base person object without redeclaration conflicts
+// If a global/module `person` already exists, reuse it; otherwise initialize it.
+// eslint-disable-next-line no-redeclare, no-undef
+const person = (typeof person !== 'undefined')
+  ? person
+  : {
+      name: 'Alice',
+      age: 30,
+      country: 'US',
+    };
 
 // Create three copies as requested
 // - clone1 and clone2 should preserve original values regardless of later changes
