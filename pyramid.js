@@ -5,7 +5,7 @@ function pyramid(ch, height) {
   if (h <= 0) return '';
   let out = '';
   for (let i = 1; i <= h; i++) {
-    const spaces = h - i;
+    const spaces = (h - i) * c.length;
     const stars = 2 * i - 1;
     let line = '';
     for (let s = 0; s < spaces; s++) line += ' ';
@@ -15,5 +15,4 @@ function pyramid(ch, height) {
   }
   return out;
 }
-
 
