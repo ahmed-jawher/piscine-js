@@ -25,6 +25,6 @@ function keepLast(s) {
 
 function keepFirstLast(s) {
   const str = String(s);
-  if (str.length <= 2) return str;
+  if (str.length <= 3) return str;
   return keepFirst(str) + keepLast(str);
 }
