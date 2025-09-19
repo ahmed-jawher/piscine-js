@@ -8,11 +8,11 @@ function multiply(a, b) {
   // Use Russian peasant multiplication (add & shift) emulation without the operator
   let result = 0;
   while (y >= 1) {
-    // if y is odd
-    if (y % 2 === 1) result += x;
+    // if y is odd (check lowest bit)
+    if ((y & 1) === 1) result += x;
     x += x; // double x
-    // halve y without using the division symbol
-    y = (y - (y % 2)) >> 1; // integer halve via bit shift
+    // halve y using bit shift
+    y = y >> 1; // integer halve via bit shift
   }
   return neg ? -result : result;
 }
@@ -39,9 +39,9 @@ function divide(a, b) {
       x -= acc;
       q += mult;
     }
-    // halve using bit shifting to avoid the division symbol
-    acc = (acc - (acc % 2)) >> 1;
-    mult = (mult - (mult % 2)) >> 1;
+    // halve using bit shifting to avoid the division symbol or modulus
+    acc = acc >> 1;
+    mult = mult >> 1;
   }
   return neg ? -q : q;
 }
