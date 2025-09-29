@@ -1,8 +1,3 @@
-// matchCron(cron, date)
-// Supports only numbers and * in 5 fields:
-// minute hour dayOfMonth month dayOfWeek
-// dayOfWeek: 1-7 where 1=Monday ... 7=Sunday
-
 function parseField(token) {
   if (token === '*') return null // wildcard
   const n = Number(token)
@@ -39,4 +34,3 @@ export function matchCron(cron, date) {
   if (cdow !== null && dow !== cdow) return false
   return true
 }
-

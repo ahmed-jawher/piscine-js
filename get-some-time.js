@@ -1,9 +1,3 @@
-// Returns the date string (dd-mm-yyyy) of the Monday starting a given week number in a year.
-// - week: 1..53 (Week 1 contains Jan 1st)
-// - year: string like '2023'
-// Rules:
-//   * Weeks start on Monday.
-//   * If the computed Monday falls in the previous year, return 01-01-<year> instead.
 export function firstDayWeek(week, year) {
   // Parse year as integer without Date's legacy year offset quirks.
   // Avoid using Date(year, ...) with small years; use Date.UTC and setUTCFullYear.

@@ -1,4 +1,3 @@
-// Date helpers
 
 export function isFriday(date) {
   if (!(date instanceof Date) || Number.isNaN(date.getTime())) return false
@@ -27,4 +26,3 @@ export function isLastDayOfMonth(date) {
   const lastDay = new Date(y, m + 1, 0).getDate()
   return d === lastDay
 }
-

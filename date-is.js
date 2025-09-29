@@ -1,33 +1,27 @@
-// Date predicate utilities
-
-export function isValid(value) {
-  if (value instanceof Date) return !Number.isNaN(value.getTime())
-  if (typeof value === 'number') return Number.isFinite(value)
-  return false
+// Check if date is valid (supports Date object or timestamp)
+function isValid(d) {
+  if (typeof d === "number") d = new Date(d); // convert timestamp to Date
+  return d instanceof Date && !isNaN(d.getTime());
 }
 
-function toMillis(x) {
-  if (x instanceof Date) return x.getTime()
-  if (typeof x === 'number') return x
-  return NaN
+// Check if first date is after second
+function isAfter(d1, d2) {
+  if (!isValid(d1) || !isValid(d2)) return false;
+  return new Date(d1).getTime() > new Date(d2).getTime();
 }
 
-export function isAfter(a, b) {
-  if (!isValid(a) || !isValid(b)) return false
-  return toMillis(a) > toMillis(b)
+// Check if second date is after first
+function isBefore(d1, d2) {
+  if (!isValid(d1) || !isValid(d2)) return false;
+  return new Date(d2).getTime() > new Date(d1).getTime();
 }
 
-export function isBefore(a, b) {
-  if (!isValid(a) || !isValid(b)) return false
-  return toMillis(a) < toMillis(b)
+// Check if date is in the future
+function isFuture(d) {
+  return isValid(d) && new Date(d).getTime() > Date.now();
 }
 
-export function isFuture(date) {
-  if (!isValid(date)) return false
-  return toMillis(date) > Date.now()
-}
-
-export function isPast(date) {
-  if (!isValid(date)) return false
-  return toMillis(date) < Date.now()
+// Check if date is in the past
+function isPast(d) {
+  return isValid(d) && new Date(d).getTime() < Date.now();
 }
