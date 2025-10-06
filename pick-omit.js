@@ -1,42 +1,30 @@
-function pick(obj, arr) {
-    if (typeof arr === 'string') {
-        arr = [arr]; 
-    }
+// pick-omit: pure functions to select or exclude keys from an object
+// Accepts a string or an array of strings as the selector.
 
-    let { appear } = getKey(obj, arr);
-    let o = {};
-    for (let i = 0; i < appear.length; i++) {
-        o[appear[i]] = obj[appear[i]];
-    }
-    return o;
+function toKeySet(keys) {
+  if (typeof keys === 'string') return new Set([keys]);
+  if (Array.isArray(keys)) return new Set(keys);
+  return new Set();
 }
 
-function omit(obj, arr) {
-    if (typeof arr === 'string') {
-        arr = [arr]; 
-    }
-    let { notappear } = getKey(obj, arr);
-    let o = {};
-    for (let i = 0; i < notappear.length; i++) {
-        o[notappear[i]] = obj[notappear[i]];
-    }
-    return o;
+function pick(obj, keys) {
+  const set = toKeySet(keys);
+  const out = {};
+  if (obj == null || set.size === 0) return out;
+  for (const k in obj) {
+    if (!Object.prototype.hasOwnProperty.call(obj, k)) continue;
+    if (set.has(k)) out[k] = obj[k];
+  }
+  return out;
 }
 
-function getKey(obj, arr) {
-    if (typeof arr === 'string') {
-        arr = [arr]; 
-    }
-    let appear = [];
-    let notappear = [];
-    let keys = Object.keys(obj);
-
-    for (let i = 0; i < keys.length; i++) {
-        if (arr.includes(keys[i])) {
-            appear.push(keys[i]);
-        } else {
-            notappear.push(keys[i]);
-        }
-    }
-    return { appear, notappear };
+function omit(obj, keys) {
+  const set = toKeySet(keys);
+  const out = {};
+  if (obj == null) return out;
+  for (const k in obj) {
+    if (!Object.prototype.hasOwnProperty.call(obj, k)) continue;
+    if (set.size === 0 || !set.has(k)) out[k] = obj[k];
+  }
+  return out;
 }

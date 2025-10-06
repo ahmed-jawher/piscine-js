@@ -1,56 +1,66 @@
-function defaultCurry(obj) {
-    return function (a) {
-        return Object.assign({}, obj, a)
-    }
-}
-function mapCurry(func) {
-    return function (obj) {
-        let arr=Object.entries(obj).map(([key, value]) => func([key, value]))
-        let newobj={}
-        for (let i=0;i<arr.length;i++){
-            newobj[arr[i][0]]=arr[i][1]
+
+function defaultCurry(obj1) {
+    return function (obj2) {
+        let res = {};
+        for (let key in obj1) {
+            res[key] = obj1[key];
         }
-        return newobj
-    }
+        for (let key in obj2) {
+            res[key] = obj2[key];
+        }
+        return res;
+    };
 }
 
-function reduceCurry(func) {
-    return function (obj, acc) {
-        if (acc == 'undefined') {
-            acc = ""
-        }  
-        return Object.entries(obj).reduce((a, [key, v]) => func(a, [key, v]), acc)
-    }
-}
-function filterCurry(func) {
-    return function (obj) {
-        return Object.fromEntries(Object.entries(obj).filter(([k, v]) => func([k, v])))
-    }
-}
-function reduceScore(obj,total=0) {
-    const newobj = filterCurry(([_, v]) => (Object.entries(filterCurry(([_, w]) => w === true)(v))).length != 0)(obj)
-    Object.entries(newobj).forEach(([_, v]) => {total+=reduceCurry((a, [n, w]) => {
-        if (n === 'shootingScore' || n === 'pilotingScore') {
-           a+=w
+function mapCurry(func) {
+    return function (obj2) {
+        let res = {};
+        for (let key in obj2) {
+            res[func([key, obj2[key]])[0]] = func([key, obj2[key]])[1];
         }
-        return a
-    })(v, 0)})
-    return total
+        return res;
+    };
 }
-function filterForce(obj) {
-   return filterCurry(([k, v]) => (Object.entries(filterCurry(([n, w]) => w === true && obj[k].shootingScore >=80)(v))).length != 0)(obj)
+
+function reduceCurry(obj1) {
+    return function (obj2, obj3) {
+        let res = obj3;
+        for (let key in obj2) {
+            res = obj1(res, [key, obj2[key]]);
+        }
+        return res;
+    };
 }
-function mapAverage(obj) {
-    return mapCurry(([k,v])=>{
-        let total = 0
-        total =reduceCurry((a, [n, w]) => {
-            if (n === 'shootingScore' || n === 'pilotingScore') {
-               a+=w
+
+function filterCurry(obj1) {
+    return function (obj2) {
+        let res = {};
+        for (let key in obj2) {
+            if (obj1([key, obj2[key]])) {
+                res[key] = obj2[key];
             }
-            return a
-        })(v, 0)
-        const averageScore = "averageScore"
-        v[averageScore]= total/2
-        return [k,v]
-    })(obj)
+        }
+        return res;
+    };
+}
+
+function reduceScore(obj1, obj2) {
+    return reduceCurry((acc, [, v]) =>
+        v.isForceUser ? acc + v.pilotingScore + v.shootingScore : acc
+    )(obj1, obj2);
+}
+
+function filterForce(obj) {
+    return filterCurry(([, v]) => v.isForceUser && v.shootingScore >= 80)(obj);
+}
+
+function mapAverage(obj) {
+    let avgScores = mapCurry(([k, v]) => [
+        k,
+        (v.pilotingScore + v.shootingScore) / 2,
+    ])(obj);
+    for (let key in avgScores) {
+        obj[key].averageScore = avgScores[key];
+    }
+    return obj;
 }

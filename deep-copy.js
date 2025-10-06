@@ -1,18 +1,27 @@
-function deepCopy(value) {
-    if (value === null || typeof value !== 'object') {
-        return value;
-    }
-    if (value instanceof RegExp) {
-        return new RegExp(value);
-    }
-    if (Array.isArray(value)) {
-        return value.map(x => deepCopy(x));
-    }
-    const copy = {};
-    for (const key in value) {
-        if (value.hasOwnProperty(key)) {
-            copy[key] = deepCopy(value[key]);
+function deepCopy(input) {
+    if (Array.isArray(input)) {
+        var output = [];
+        for (var i = 0; i < input.length; i++) {
+            output[i] = deepCopy(input[i]);
         }
+        return output;
+    } else if (isDefenitelyAnObject(input)) {
+        var output = {};
+        for (var key in input) {
+            output[key] = deepCopy(input[key]);
+        }
+        return output;
+    } else {
+        return input;
     }
-    return copy;
+}
+
+function isDefenitelyAnObject(input) {
+    return (
+        typeof input === "object" &&
+        !(typeof input === "function") &&
+        !Array.isArray(input) &&
+        input !== null &&
+        !(input instanceof RegExp)
+    );
 }

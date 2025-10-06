@@ -1,11 +1,15 @@
-// hasCity: creates a checker for whether a city belongs to a country's city list
-
-function hasCity(country, cities) {
-  const set = new Set((cities || []).map((c) => String(c)));
-  return function (city) {
-    const name = String(city);
-    if (set.has(name)) return name + ' is a city from ' + country;
-    return name + ' is not a city from ' + country;
+// flow: compose functions left-to-right like lodash _.flow
+// Usage: const f = flow([fn1, fn2, fn3]); f(a,b) -> fn3(fn2(fn1(a,b)))
+export const flow = (funcs = []) => {
+  if (!Array.isArray(funcs)) throw new TypeError('flow expects an array');
+  const list = funcs.slice();
+  return (...args) => {
+    if (list.length === 0) return args[0];
+    let acc = list[0](...args);
+    for (let i = 1; i < list.length; i++) {
+      acc = list[i](acc);
+    }
+    return acc;
   };
-}
+};
 
