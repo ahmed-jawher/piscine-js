@@ -32,6 +32,7 @@ async function main() {
 
   entries.sort((a, b) => a.localeCompare(b))
   const lines = entries.map((v, i) => `${i + 1}. ${v}`)
+  if (lines.length === 0) return
   const output = lines.join('\n')
 
   // Write vip.txt next to provided directory
@@ -42,7 +43,7 @@ async function main() {
     // Ignore write errors per tests that may only check stdout
   }
 
-  if (output) console.log(output)
+  console.log(output)
 }
 
 function formatLabel(filename) {
