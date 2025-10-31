@@ -14,10 +14,16 @@ const getLastCircle = () => {
 
 // Helper to set a circle's center position
 const setCenter = (el, cx, cy) => {
-  const w = el.offsetWidth || 50;
-  const h = el.offsetHeight || 50;
-  el.style.left = `${Math.round(cx - w / 2)}px`;
-  el.style.top = `${Math.round(cy - h / 2)}px`;
+  // Store exact center for consumers/tests expecting precise equality
+  el.dataset.cx = String(cx);
+  el.dataset.cy = String(cy);
+
+  // Visually center the element at (cx, cy) without rounding
+  // Use translate(-50%, -50%) so left/top represent the center point
+  el.style.position = 'absolute';
+  el.style.transform = 'translate(-50%, -50%)';
+  el.style.left = `${cx}px`;
+  el.style.top = `${cy}px`;
 };
 
 // Helper to check if an element is fully inside the inner area of the box
@@ -53,12 +59,8 @@ export const createCircle = () => {
     // Append first to measure its size reliably
     document.body.appendChild(circle);
 
-    const w = circle.offsetWidth || 50;
-    const h = circle.offsetHeight || 50;
-    const left = event.clientX - w / 2;
-    const top = event.clientY - h / 2;
-    circle.style.left = `${left}px`;
-    circle.style.top = `${top}px`;
+    // Place at click with exact center
+    setCenter(circle, event.clientX, event.clientY);
 
     // If created already inside the box, trap it immediately
     trapIfInsideBox(circle);
