@@ -25,6 +25,7 @@ export const getActive = () => {
   const active = classical.filter(a => a.classList.contains('active'));
   const nonActive = classical.filter(a => !a.classList.contains('active'));
   return [active, nonActive];
+  
 };
 
 // دالة لإيجاد المعماري المطلوب "BonannoPisano"
